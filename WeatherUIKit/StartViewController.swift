@@ -132,9 +132,11 @@ class StartViewController: UIViewController {
         networkManager.fetchCurrentWeather(city: city) { weather in
              let formatter = DateFormatter()
              formatter.dateFormat = "dd MMM yyyy"
+            
 
              DispatchQueue.main.async {
                 self.currentTemperature.text = (String(self.kelvinToIntCelsiusConverter(weather.main.temp)) + "°C")
+                self.currentDate.text = formatter.string(from: Date())
                 self.currentLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
                 self.weatherDescription.text = weather.weather[0].description
                 self.minTemperature.text = ("L: " + String(self.kelvinToIntCelsiusConverter(weather.main.temp_min)) + "°C" )
