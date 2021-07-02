@@ -9,21 +9,25 @@
 /* Begin PBXBuildFile section */
 		20EA5F62268F19E900E2863D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F61268F19E900E2863D /* AppDelegate.swift */; };
 		20EA5F64268F19E900E2863D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F63268F19E900E2863D /* SceneDelegate.swift */; };
-		20EA5F66268F19E900E2863D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F65268F19E900E2863D /* ViewController.swift */; };
-		20EA5F69268F19E900E2863D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20EA5F67268F19E900E2863D /* Main.storyboard */; };
+		20EA5F66268F19E900E2863D /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F65268F19E900E2863D /* StartViewController.swift */; };
 		20EA5F6B268F19EC00E2863D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20EA5F6A268F19EC00E2863D /* Assets.xcassets */; };
 		20EA5F6E268F19EC00E2863D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20EA5F6C268F19EC00E2863D /* LaunchScreen.storyboard */; };
+		20EA5F79268F231900E2863D /* NetworkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F78268F231900E2863D /* NetworkManagerProtocol.swift */; };
+		20EA5F7E268F238200E2863D /* WeatherNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F7D268F238200E2863D /* WeatherNetworkManager.swift */; };
+		20EA5F82268F47C800E2863D /* ExtensionImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F81268F47C800E2863D /* ExtensionImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		20EA5F5E268F19E900E2863D /* WeatherUIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherUIKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20EA5F61268F19E900E2863D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		20EA5F63268F19E900E2863D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		20EA5F65268F19E900E2863D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		20EA5F68268F19E900E2863D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		20EA5F65268F19E900E2863D /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		20EA5F6A268F19EC00E2863D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		20EA5F6D268F19EC00E2863D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20EA5F6F268F19EC00E2863D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		20EA5F78268F231900E2863D /* NetworkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerProtocol.swift; sourceTree = "<group>"; };
+		20EA5F7D268F238200E2863D /* WeatherNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherNetworkManager.swift; sourceTree = "<group>"; };
+		20EA5F81268F47C800E2863D /* ExtensionImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +60,25 @@
 		20EA5F60268F19E900E2863D /* WeatherUIKit */ = {
 			isa = PBXGroup;
 			children = (
+				20EA5F7C268F232A00E2863D /* NetworkManager */,
 				20EA5F61268F19E900E2863D /* AppDelegate.swift */,
 				20EA5F63268F19E900E2863D /* SceneDelegate.swift */,
-				20EA5F65268F19E900E2863D /* ViewController.swift */,
-				20EA5F67268F19E900E2863D /* Main.storyboard */,
+				20EA5F65268F19E900E2863D /* StartViewController.swift */,
+				20EA5F81268F47C800E2863D /* ExtensionImageView.swift */,
 				20EA5F6A268F19EC00E2863D /* Assets.xcassets */,
 				20EA5F6C268F19EC00E2863D /* LaunchScreen.storyboard */,
 				20EA5F6F268F19EC00E2863D /* Info.plist */,
 			);
 			path = WeatherUIKit;
+			sourceTree = "<group>";
+		};
+		20EA5F7C268F232A00E2863D /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				20EA5F78268F231900E2863D /* NetworkManagerProtocol.swift */,
+				20EA5F7D268F238200E2863D /* WeatherNetworkManager.swift */,
+			);
+			path = NetworkManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -126,7 +140,6 @@
 			files = (
 				20EA5F6E268F19EC00E2863D /* LaunchScreen.storyboard in Resources */,
 				20EA5F6B268F19EC00E2863D /* Assets.xcassets in Resources */,
-				20EA5F69268F19E900E2863D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,23 +150,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20EA5F66268F19E900E2863D /* ViewController.swift in Sources */,
+				20EA5F82268F47C800E2863D /* ExtensionImageView.swift in Sources */,
+				20EA5F66268F19E900E2863D /* StartViewController.swift in Sources */,
 				20EA5F62268F19E900E2863D /* AppDelegate.swift in Sources */,
+				20EA5F79268F231900E2863D /* NetworkManagerProtocol.swift in Sources */,
 				20EA5F64268F19E900E2863D /* SceneDelegate.swift in Sources */,
+				20EA5F7E268F238200E2863D /* WeatherNetworkManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		20EA5F67268F19E900E2863D /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				20EA5F68268F19E900E2863D /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		20EA5F6C268F19EC00E2863D /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
