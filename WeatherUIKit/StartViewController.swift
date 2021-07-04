@@ -13,9 +13,9 @@ class StartViewController: UIViewController {
     private let networkManager = WeatherNetworkManager()
     
     private let currentLocation: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Александровск-Сахалинский"
+        label.text = "City name"
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.3
@@ -38,6 +38,15 @@ class StartViewController: UIViewController {
         label.text = "500000º"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 70, weight: .bold)
+        return label
+    }()
+    
+    private let feelsLike: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Feels like: 1500000"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 15, weight: .light)
         return label
     }()
     
@@ -80,18 +89,26 @@ class StartViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 17, weight: .light)
         return label
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        addRightBarButton()
         addConstraints()
         loadData(city: "Moscow")
     }
-
+    
+    private func addRightBarButton() {
+        let rightBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(changeCity))
+        rightBarButton.tintColor = .black
+        navigationItem.rightBarButtonItem = rightBarButton
+    }
+    
     private func addConstraints() {
         view.addSubview(currentLocation)
         view.addSubview(currentDate)
         view.addSubview(currentTemperature)
+        view.addSubview(feelsLike)
         view.addSubview(maxTemperature)
         view.addSubview(minTemperature)
         view.addSubview(weatherImage)
@@ -116,7 +133,10 @@ class StartViewController: UIViewController {
             minTemperature.leftAnchor.constraint(equalTo: view.centerXAnchor, constant: 20),
             minTemperature.widthAnchor.constraint(equalTo: maxTemperature.widthAnchor),
             
-            weatherImage.topAnchor.constraint(equalTo: maxTemperature.bottomAnchor, constant: 30),
+            feelsLike.topAnchor.constraint(equalTo: minTemperature.bottomAnchor, constant: 15),
+            feelsLike.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            weatherImage.topAnchor.constraint(equalTo: feelsLike.bottomAnchor, constant: 30),
             weatherImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             weatherImage.widthAnchor.constraint(equalToConstant: 80),
             weatherImage.heightAnchor.constraint(equalToConstant: 80),
@@ -128,14 +148,17 @@ class StartViewController: UIViewController {
         
     }
     
+    
     private func loadData(city: String) {
         networkManager.fetchCurrentWeather(city: city) { weather in
-             let formatter = DateFormatter()
-             formatter.dateFormat = "dd MMM yyyy"
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd MMM yyyy"
             
-
-             DispatchQueue.main.async {
+            
+            DispatchQueue.main.async {
                 self.currentTemperature.text = (String(self.kelvinToIntCelsiusConverter(weather.main.temp)) + "°C")
+                self.feelsLike.text = ("Feels like: " + String(self.kelvinToIntCelsiusConverter(weather.main.feels_like)) + "°C")
+//                print("Feels like: \(weather.main.feels_like)")
                 self.currentDate.text = formatter.string(from: Date())
                 self.currentLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
                 self.weatherDescription.text = weather.weather[0].description
@@ -143,13 +166,33 @@ class StartViewController: UIViewController {
                 self.maxTemperature.text = ("H: " + String(self.kelvinToIntCelsiusConverter(weather.main.temp_max)) + "°C" )
                 self.weatherImage.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
                 UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedCity")
-             }
+            }
         }
     }
     
     private func kelvinToIntCelsiusConverter(_ kelvin: Float) -> Int {
         return Int(kelvin - 273.15)
     }
+    
+    public func getAlert() {
 
+        let alertController = UIAlertController(title: "Error", message: "I can't find this city:(", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    @objc func changeCity() {
+        
+        let alertController = UIAlertController(title: "Enter city", message: "", preferredStyle: .alert)
+        alertController.addTextField(configurationHandler: nil)
+        alertController.addAction(UIAlertAction(title: "Go", style: .default, handler: {_ in
+            guard let textField = alertController.textFields else {return }
+            guard let city = textField[0].text else {return }
+            self.loadData(city: city)
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+    
 }
 

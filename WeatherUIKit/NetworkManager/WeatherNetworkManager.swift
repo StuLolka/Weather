@@ -5,9 +5,9 @@
 //  Created by Сэнди Белка on 02.07.2021.
 //
 
-import Foundation
+import UIKit
 
-class WeatherNetworkManager: NetworkManagerProtocol {
+final class WeatherNetworkManager: NetworkManagerProtocol {
     func fetchCurrentWeather(city: String, completion: @escaping (WeatherModel) -> ()) {
 
         let formattedCity = city.replacingOccurrences(of: " ", with: "+")
@@ -20,17 +20,30 @@ class WeatherNetworkManager: NetworkManagerProtocol {
 
         let urlRequest = URLRequest(url: url)
         URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-        guard let data = data else { return }
+            guard let data = data else { return }
 
             do {
                 let currentWeather = try JSONDecoder().decode(WeatherModel.self, from: data)
                 completion(currentWeather)
             } catch {
+                self.showError()
                 print("Something went wrong: \(error.localizedDescription)")
             }
 
         }.resume()
+        
     }
+    
+    func showError() {
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: "Error", message: "I can't find this city:(", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            StartViewController().getAlert()
+//            UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
+            print("AALALLLALALAL")
+        }
+    }
+
     
     func fetchCurrentLocationWeather(lat: String, lon: String, completion: @escaping (WeatherModel) -> ()) {
 //        print(error.localizedDescription)
