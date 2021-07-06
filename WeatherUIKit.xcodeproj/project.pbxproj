@@ -45,6 +45,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		200B74CF2694A980002528C5 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				20EA5F61268F19E900E2863D /* AppDelegate.swift */,
+				20EA5F63268F19E900E2863D /* SceneDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
+		200B74D02694A992002528C5 /* Views&Controller */ = {
+			isa = PBXGroup;
+			children = (
+				20EA5F65268F19E900E2863D /* StartViewController.swift */,
+				20F1AA2626946BD900F3E3DF /* Views.swift */,
+			);
+			path = "Views&Controller";
+			sourceTree = "<group>";
+		};
 		20EA5F55268F19E800E2863D = {
 			isa = PBXGroup;
 			children = (
@@ -65,10 +83,8 @@
 			isa = PBXGroup;
 			children = (
 				20EA5F7C268F232A00E2863D /* NetworkManager */,
-				20EA5F61268F19E900E2863D /* AppDelegate.swift */,
-				20EA5F63268F19E900E2863D /* SceneDelegate.swift */,
-				20EA5F65268F19E900E2863D /* StartViewController.swift */,
-				20F1AA2626946BD900F3E3DF /* Views.swift */,
+				200B74CF2694A980002528C5 /* Delegates */,
+				200B74D02694A992002528C5 /* Views&Controller */,
 				20F1AA2926946F2000F3E3DF /* Extensions */,
 				20EA5F6A268F19EC00E2863D /* Assets.xcassets */,
 				20EA5F6C268F19EC00E2863D /* LaunchScreen.storyboard */,
