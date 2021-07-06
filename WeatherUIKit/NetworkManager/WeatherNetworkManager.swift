@@ -16,6 +16,7 @@ final class WeatherNetworkManager: NetworkManagerProtocol {
         let API_URL = "http://api.openweathermap.org/data/2.5/weather?q=\(formattedCity)&appid=\(NetworkProperties.API_KEY)&units=metric"
 
         guard let url = URL(string: API_URL) else {
+            StartViewController().getAlertWithError()
             print("Something went wrong: URL error")
             return
         }
