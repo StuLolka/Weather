@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import CoreLocation
 
 // http://api.openweathermap.org/data/2.5/weather?q=Moscow&appid=bdfba249e4cd206073100bbe3978c661
 class StartViewController: UIViewController {
     
+    public let locationManager = CLLocationManager()
     private let networkManager = WeatherNetworkManager()
     
     private let currentLocation: UILabel = {
@@ -93,9 +95,12 @@ class StartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
         addRightBarButton()
         addConstraints()
-        loadData(city: "Moscow")
+        locationManager.delegate = self
+//        loadDataSpecificCity(city: "Moscow")
     }
     
     private func addRightBarButton() {
@@ -149,29 +154,34 @@ class StartViewController: UIViewController {
     }
     
     
-    private func loadData(city: String) {
+    private func loadDataSpecificCity(city: String) {
         networkManager.fetchCurrentWeather(city: city) { weather in
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd MMM yyyy"
-            
-            
-            DispatchQueue.main.async {
-                self.currentTemperature.text = (String(self.kelvinToIntCelsiusConverter(weather.main.temp)) + "°C")
-                self.feelsLike.text = ("Feels like: " + String(self.kelvinToIntCelsiusConverter(weather.main.feels_like)) + "°C")
-//                print("Feels like: \(weather.main.feels_like)")
-                self.currentDate.text = formatter.string(from: Date())
-                self.currentLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
-                self.weatherDescription.text = weather.weather[0].description
-                self.minTemperature.text = ("L: " + String(self.kelvinToIntCelsiusConverter(weather.main.temp_min)) + "°C" )
-                self.maxTemperature.text = ("H: " + String(self.kelvinToIntCelsiusConverter(weather.main.temp_max)) + "°C" )
-                self.weatherImage.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
-                UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedCity")
-            }
+            self.addDataToLabel(weather: weather)
         }
     }
     
-    private func kelvinToIntCelsiusConverter(_ kelvin: Float) -> Int {
-        return Int(kelvin - 273.15)
+    public func loadDataCurrentCity(location: CLLocationCoordinate2D) {
+        
+        networkManager.fetchCurrentLocationWeather(lat: location.latitude, lon: location.longitude) { weather in
+            self.addDataToLabel(weather: weather)
+        }
+    }
+    
+    private func addDataToLabel(weather: WeatherModel) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM yyyy"
+
+        DispatchQueue.main.async {
+            self.currentTemperature.text = (String(weather.main.temp) + "°C")
+            self.feelsLike.text = ("Feels like: " + String(weather.main.feels_like) + "°C")
+            self.currentDate.text = formatter.string(from: Date())
+            self.currentLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
+            self.weatherDescription.text = weather.weather[0].description
+            self.minTemperature.text = ("L: " + String(weather.main.temp_min) + "°C" )
+            self.maxTemperature.text = ("H: " + String(weather.main.temp_max) + "°C" )
+            self.weatherImage.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
+            UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedCity")
+        }
     }
     
     public func getAlert() {
@@ -188,7 +198,7 @@ class StartViewController: UIViewController {
         alertController.addAction(UIAlertAction(title: "Go", style: .default, handler: {_ in
             guard let textField = alertController.textFields else {return }
             guard let city = textField[0].text else {return }
-            self.loadData(city: city)
+            self.loadDataSpecificCity(city: city)
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)

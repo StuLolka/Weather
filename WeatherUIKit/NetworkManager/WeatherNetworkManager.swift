@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class WeatherNetworkManager: NetworkManagerProtocol {
+    
     func fetchCurrentWeather(city: String, completion: @escaping (WeatherModel) -> ()) {
 
         let formattedCity = city.replacingOccurrences(of: " ", with: "+")
-        let API_URL = "http://api.openweathermap.org/data/2.5/weather?q=\(formattedCity)&appid=\(NetworkProperties.API_KEY)"
+        let API_URL = "http://api.openweathermap.org/data/2.5/weather?q=\(formattedCity)&appid=\(NetworkProperties.API_KEY)&units=metric"
 
         guard let url = URL(string: API_URL) else {
             print("Something went wrong: URL error")
@@ -26,29 +28,41 @@ final class WeatherNetworkManager: NetworkManagerProtocol {
                 let currentWeather = try JSONDecoder().decode(WeatherModel.self, from: data)
                 completion(currentWeather)
             } catch {
-                self.showError()
                 print("Something went wrong: \(error.localizedDescription)")
             }
 
         }.resume()
         
     }
-    
-    func showError() {
-        DispatchQueue.main.async {
-            let alertController = UIAlertController(title: "Error", message: "I can't find this city:(", preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            StartViewController().getAlert()
-//            UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
-            print("AALALLLALALAL")
-        }
-    }
 
     
-    func fetchCurrentLocationWeather(lat: String, lon: String, completion: @escaping (WeatherModel) -> ()) {
-//        print(error.localizedDescription)
+    func fetchCurrentLocationWeather(lat: CLLocationDegrees, lon: CLLocationDegrees, completion: @escaping (WeatherModel) -> ()) {
+        guard let urlString = "http://api.openweathermap.org/data/2.5/weather?lat=\(lat)&lon=\(lon)&appid=\(NetworkProperties.API_KEY)&units=metric".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {return }
+        guard let url = URL(string: urlString) else {return }
+        URLSession.shared.dataTask(with: url) {data, response, error in
+            guard error == nil, let data = data else {return }
+
+            do {
+                let currentWeather = try JSONDecoder().decode(WeatherModel.self, from: data)
+                completion(currentWeather)
+            } catch {
+//                self.showError()
+                print("Something went wrong: \(error.localizedDescription)")
+            }
+        }.resume()
+        
     }
     
+    
+    //    func showError() {
+    //        DispatchQueue.main.async {
+    //            let alertController = UIAlertController(title: "Error", message: "I can't find this city:(", preferredStyle: .alert)
+    //            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+    //            StartViewController().getAlert()
+    ////            UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
+    //            print("AALALLLALALAL")
+    //        }
+    //    }
 }
 
 struct Weather: Codable {

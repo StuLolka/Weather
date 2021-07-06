@@ -5,11 +5,10 @@
 //  Created by Сэнди Белка on 02.07.2021.
 //
 
-import Foundation
+import CoreLocation
 
 protocol NetworkManagerProtocol {
     
     func fetchCurrentWeather(city: String, completion: @escaping (WeatherModel) -> ())
-    func fetchCurrentLocationWeather(lat: String, lon: String, completion: @escaping (WeatherModel) -> ())
-//    func fetchNextFiveWeatherForecast(city: String, completion: @escaping ([ForecastTemperature]) -> ())
+    func fetchCurrentLocationWeather(lat: CLLocationDegrees, lon: CLLocationDegrees, completion: @escaping (WeatherModel) -> ())
 }
