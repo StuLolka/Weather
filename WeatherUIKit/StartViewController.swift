@@ -13,84 +13,30 @@ class StartViewController: UIViewController {
     
     public let locationManager = CLLocationManager()
     private let networkManager = WeatherNetworkManager()
+    private let views = Views()
     
-    private let currentLocation: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "City name"
-        label.textAlignment = .center
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.3
-        label.font = UIFont.systemFont(ofSize: 38, weight: .heavy)
-        return label
-    }()
+    public var isError = false {
+        didSet {
+            print("work")
+            getAlert()
+        }
+    }
     
-    private let currentDate: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Current date"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-        return label
-    }()
+    private lazy var currentLocation = views.currentLocation
     
-    private let currentTemperature: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "500000º"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 70, weight: .bold)
-        return label
-    }()
+    private lazy var currentDate = views.currentDate
     
-    private let feelsLike: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Feels like: 1500000"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 15, weight: .light)
-        return label
-    }()
+    private lazy var currentTemperature = views.currentTemperature
     
-    private let maxTemperature: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "H: tempº"
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.8
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
-        return label
-    }()
+    private lazy var feelsLike = views.feelsLike
     
-    private let minTemperature: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "L: tempº"
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.8
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
-        return label
-    }()
+    private lazy var maxTemperature = views.maxTemperature
     
-    private let weatherImage: UIImageView = {
-        let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
-        image.tintColor = .black
-        image.image = UIImage(systemName: "questionmark")
-        return image
-    }()
+    private lazy var minTemperature = views.minTemperature
     
-    private let weatherDescription: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.text = "Here will be description of weather"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 17, weight: .light)
-        return label
-    }()
+    private lazy var weatherImage = views.weatherImage
+    
+    private lazy var weatherDescription = views.weatherDescription
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -172,23 +118,25 @@ class StartViewController: UIViewController {
         formatter.dateFormat = "dd MMM yyyy"
 
         DispatchQueue.main.async {
-            self.currentTemperature.text = (String(weather.main.temp) + "°C")
-            self.feelsLike.text = ("Feels like: " + String(weather.main.feels_like) + "°C")
+            self.currentTemperature.text = (String(Int(weather.main.temp)) + "°C")
+            self.feelsLike.text = ("Feels like: " + String(Int(weather.main.feels_like)) + "°C")
             self.currentDate.text = formatter.string(from: Date())
             self.currentLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
             self.weatherDescription.text = weather.weather[0].description
-            self.minTemperature.text = ("L: " + String(weather.main.temp_min) + "°C" )
-            self.maxTemperature.text = ("H: " + String(weather.main.temp_max) + "°C" )
+            self.minTemperature.text = ("L: " + String(Int(weather.main.temp_min)) + "°C" )
+            self.maxTemperature.text = ("H: " + String(Int(weather.main.temp_max)) + "°C" )
             self.weatherImage.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
             UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedCity")
         }
     }
     
     public func getAlert() {
-
+        
         let alertController = UIAlertController(title: "Error", message: "I can't find this city:(", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(alertController, animated: true, completion: nil)
+        UIApplication.shared.windows.first{$0.isKeyWindow}?.rootViewController?.present(alertController, animated: true, completion: nil)
+
+        
     }
     
     @objc func changeCity() {

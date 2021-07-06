@@ -16,6 +16,7 @@
 		20EA5F79268F231900E2863D /* NetworkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F78268F231900E2863D /* NetworkManagerProtocol.swift */; };
 		20EA5F7E268F238200E2863D /* WeatherNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F7D268F238200E2863D /* WeatherNetworkManager.swift */; };
 		20EA5F82268F47C800E2863D /* ExtensionImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EA5F81268F47C800E2863D /* ExtensionImageView.swift */; };
+		20F1AA2726946BD900F3E3DF /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F1AA2626946BD900F3E3DF /* Views.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		20EA5F78268F231900E2863D /* NetworkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerProtocol.swift; sourceTree = "<group>"; };
 		20EA5F7D268F238200E2863D /* WeatherNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherNetworkManager.swift; sourceTree = "<group>"; };
 		20EA5F81268F47C800E2863D /* ExtensionImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionImageView.swift; sourceTree = "<group>"; };
+		20F1AA2626946BD900F3E3DF /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +68,8 @@
 				20EA5F61268F19E900E2863D /* AppDelegate.swift */,
 				20EA5F63268F19E900E2863D /* SceneDelegate.swift */,
 				20EA5F65268F19E900E2863D /* StartViewController.swift */,
-				2067931D2692398A00493E1F /* ExtensionStartViewController.swift */,
-				20EA5F81268F47C800E2863D /* ExtensionImageView.swift */,
+				20F1AA2626946BD900F3E3DF /* Views.swift */,
+				20F1AA2926946F2000F3E3DF /* Extensions */,
 				20EA5F6A268F19EC00E2863D /* Assets.xcassets */,
 				20EA5F6C268F19EC00E2863D /* LaunchScreen.storyboard */,
 				20EA5F6F268F19EC00E2863D /* Info.plist */,
@@ -82,6 +84,15 @@
 				20EA5F7D268F238200E2863D /* WeatherNetworkManager.swift */,
 			);
 			path = NetworkManager;
+			sourceTree = "<group>";
+		};
+		20F1AA2926946F2000F3E3DF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2067931D2692398A00493E1F /* ExtensionStartViewController.swift */,
+				20EA5F81268F47C800E2863D /* ExtensionImageView.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -157,6 +168,7 @@
 				20EA5F66268F19E900E2863D /* StartViewController.swift in Sources */,
 				20EA5F62268F19E900E2863D /* AppDelegate.swift in Sources */,
 				2067931E2692398A00493E1F /* ExtensionStartViewController.swift in Sources */,
+				20F1AA2726946BD900F3E3DF /* Views.swift in Sources */,
 				20EA5F79268F231900E2863D /* NetworkManagerProtocol.swift in Sources */,
 				20EA5F64268F19E900E2863D /* SceneDelegate.swift in Sources */,
 				20EA5F7E268F238200E2863D /* WeatherNetworkManager.swift in Sources */,

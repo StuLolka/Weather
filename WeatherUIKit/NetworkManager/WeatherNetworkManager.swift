@@ -28,6 +28,9 @@ final class WeatherNetworkManager: NetworkManagerProtocol {
                 let currentWeather = try JSONDecoder().decode(WeatherModel.self, from: data)
                 completion(currentWeather)
             } catch {
+                DispatchQueue.main.async {
+                    StartViewController().isError = true
+                }
                 print("Something went wrong: \(error.localizedDescription)")
             }
 
