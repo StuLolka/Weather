@@ -29,7 +29,7 @@ final class WeatherNetworkManager: NetworkManagerProtocol {
                 completion(currentWeather)
             } catch {
                 DispatchQueue.main.async {
-                    StartViewController().isError = true
+                    StartViewController().getAlertWithError()
                 }
                 print("Something went wrong: \(error.localizedDescription)")
             }
@@ -49,23 +49,11 @@ final class WeatherNetworkManager: NetworkManagerProtocol {
                 let currentWeather = try JSONDecoder().decode(WeatherModel.self, from: data)
                 completion(currentWeather)
             } catch {
-//                self.showError()
                 print("Something went wrong: \(error.localizedDescription)")
             }
         }.resume()
         
     }
-    
-    
-    //    func showError() {
-    //        DispatchQueue.main.async {
-    //            let alertController = UIAlertController(title: "Error", message: "I can't find this city:(", preferredStyle: .alert)
-    //            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-    //            StartViewController().getAlert()
-    ////            UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
-    //            print("AALALLLALALAL")
-    //        }
-    //    }
 }
 
 struct Weather: Codable {
@@ -80,14 +68,10 @@ struct Main: Codable {
     let feels_like: Float
     let temp_min: Float
     let temp_max: Float
-    let pressure: Float
-    let humidity: Float
 }
 
 struct Sys: Codable {
     let country: String?
-    let sunrise: Int?
-    let sunset: Int?
 }
 
 struct WeatherModel: Codable {
@@ -95,9 +79,6 @@ struct WeatherModel: Codable {
     let main: Main
     let sys: Sys
     let name: String?
-    let dt: Int
-    let timezone: Int?
-    let dt_txt: String?
 }
 
 struct NetworkProperties {
