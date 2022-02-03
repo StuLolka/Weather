@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  WeatherUIKit
-//
-//  Created by Сэнди Белка on 02.07.2021.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -15,10 +8,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 
         guard let windowScene = (scene as? UIWindowScene) else { return }
-
-        let vc = UINavigationController(rootViewController: StartViewController())
+        
+        let navigationController = UINavigationController()
+        let vc = ScreenBuilder.shared.initialWeatherViewController()
+        navigationController.viewControllers = [vc]
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = vc
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
 

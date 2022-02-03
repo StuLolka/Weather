@@ -1,9 +1,3 @@
-//
-//  ExtensionImageView.swift
-//  WeatherUIKit
-//
-//  Created by Сэнди Белка on 02.07.2021.
-//
 
 import UIKit
 

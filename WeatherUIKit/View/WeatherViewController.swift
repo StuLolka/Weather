@@ -1,15 +1,18 @@
-//
-//  ViewController.swift
-//  WeatherUIKit
-//
-//  Created by Сэнди Белка on 02.07.2021.
-//
 
 import UIKit
 import CoreLocation
 
-// http://api.openweathermap.org/data/2.5/weather?q=Moscow&appid=bdfba249e4cd206073100bbe3978c661
-class StartViewController: UIViewController {
+protocol WeatherPresenterProtocol {
+    var view: WeatherViewProtocol? { get set }
+    
+    func startRequestLocation()
+    func loadDataSpecificCity(city: String)
+    func getUserLocation()
+}
+
+final class WeatherViewController: UIViewController, WeatherViewProtocol {
+    
+    var presenter: WeatherPresenterProtocol
     
     public let locationManager = CLLocationManager()
     private let networkManager = WeatherNetworkManager()
@@ -29,14 +32,43 @@ class StartViewController: UIViewController {
     
     private lazy var weatherDescription = views.weatherDescription
     
+    init(presenter: WeatherPresenterProtocol) {
+         self.presenter = presenter
+         super.init(nibName: nil, bundle: nil)
+     }
+
+     required init?(coder: NSCoder) {
+         fatalError("init(coder:) is not supported")
+     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
         addButtonsToNavigationBar()
         addConstraints()
-        locationManager.delegate = self
+        view.backgroundColor = .systemBackground
+        
+        presenter.startRequestLocation()
+    }
+    
+    func addDataToLabel(weather: WeatherModel) {
+
+        DispatchQueue.main.async {
+            self.currentTemperature.text = (String(Int(weather.main.temp)) + "°C")
+            self.feelsLike.text = ("Feels like: " + String(Int(weather.main.feels_like)) + "°C")
+            self.currentLocation.text = "\(weather.name ?? ""), \(weather.sys.country ?? "")"
+            self.weatherDescription.text = weather.weather[0].description
+            self.minTemperature.text = ("L: " + String(Int(weather.main.temp_min)) + "°C" )
+            self.maxTemperature.text = ("H: " + String(Int(weather.main.temp_max)) + "°C" )
+            self.weatherImage.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
+            UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedCity")
+        }
+    }
+    
+    // MARK: - alerts
+    func getAlertWithError() {
+        let alertController = UIAlertController(title: "Error", message: "I can't find this city:(", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        UIApplication.shared.windows.first{$0.isKeyWindow}?.rootViewController?.present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - navigation bar
@@ -62,7 +94,9 @@ class StartViewController: UIViewController {
         NSLayoutConstraint.activate([
             
             currentLocation.bottomAnchor.constraint(equalTo: currentTemperature.topAnchor, constant: -30),
-            currentLocation.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            currentLocation.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
+            currentLocation.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
+            
             
             currentTemperature.bottomAnchor.constraint(equalTo: maxTemperature.topAnchor, constant: -30),
             currentTemperature.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -91,42 +125,7 @@ class StartViewController: UIViewController {
         ])
         
     }
-    
-    //MARK: - load and add data
-    private func loadDataSpecificCity(city: String) {
-        networkManager.fetchCurrentWeather(city: city) { weather in
-            self.addDataToLabel(weather: weather)
-        }
-    }
-    
-    public func loadDataCurrentCity(location: CLLocationCoordinate2D) {
-        
-        networkManager.fetchCurrentLocationWeather(lat: location.latitude, lon: location.longitude) { weather in
-            self.addDataToLabel(weather: weather)
-        }
-    }
-    
-    private func addDataToLabel(weather: WeatherModel) {
 
-        DispatchQueue.main.async {
-            self.currentTemperature.text = (String(Int(weather.main.temp)) + "°C")
-            self.feelsLike.text = ("Feels like: " + String(Int(weather.main.feels_like)) + "°C")
-            self.currentLocation.text = "\(weather.name ?? ""), \(weather.sys.country ?? "")"
-            self.weatherDescription.text = weather.weather[0].description
-            self.minTemperature.text = ("L: " + String(Int(weather.main.temp_min)) + "°C" )
-            self.maxTemperature.text = ("H: " + String(Int(weather.main.temp_max)) + "°C" )
-            self.weatherImage.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
-            UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedCity")
-        }
-    }
-    
-    //  MARK: - alerts
-    public func getAlertWithError() {
-        let alertController = UIAlertController(title: "Error", message: "I can't find this city:(", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        UIApplication.shared.windows.first{$0.isKeyWindow}?.rootViewController?.present(alertController, animated: true, completion: nil)
-    }
-    
     @objc func changeCity() {
         
         let alertController = UIAlertController(title: "Enter city", message: "", preferredStyle: .alert)
@@ -134,7 +133,7 @@ class StartViewController: UIViewController {
         alertController.addAction(UIAlertAction(title: "Go", style: .default, handler: {_ in
             guard let textField = alertController.textFields else {return }
             guard let city = textField[0].text else {return }
-            self.loadDataSpecificCity(city: city)
+            self.presenter.loadDataSpecificCity(city: city)
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
@@ -142,8 +141,7 @@ class StartViewController: UIViewController {
     
     //MARK: - @objc func get user location
     @objc func getUserLocation() {
-        guard let location = locationManager.location?.coordinate else {return }
-        loadDataCurrentCity(location: location)
+        presenter.getUserLocation()
     }
     
 }

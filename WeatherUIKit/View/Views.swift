@@ -1,10 +1,3 @@
-//
-//  Views.swift
-//  WeatherUIKit
-//
-//  Created by Сэнди Белка on 06.07.2021.
-//
-
 import UIKit
 
 final class Views {
